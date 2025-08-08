@@ -3,42 +3,12 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Setup Node.js 22
-        - echo "Setting up Node.js 22..."
-        - nvm install 22
-        - nvm use 22
-        - echo "✅ Node version:" && node --version
-        - echo "✅ NPM version:" && npm --version
-        
-        # Install dependencies
-        - echo "Installing dependencies..."
+        - npm install nuxt@3.11.2 --save-dev
         - npm ci
-        
-        # Verify installation
-        - echo "Checking installed packages..."
-        - ls -la node_modules/.bin/ | grep nuxt || echo "Nuxt not found in .bin"
-        - echo "Package.json check:"
-        - cat package.json
-        
     build:
       commands:
-        - echo "Starting build process..."
-        - echo "Current directory:" && pwd
-        
-        # Build directly without prepare (prepare is optional for production builds)
-        - echo "Running nuxt build..."
-        - ./node_modules/.bin/nuxt build
-        
-        # Verify build output
-        - echo "Checking build output..."
-        - ls -la .output/
-        - ls -la .output/public/ || echo "Public directory not found, checking server..."
-        - ls -la .output/server/ || echo "Server directory not found"
-        
+        - npx --yes nuxt@3.11.2 build
   artifacts:
     baseDirectory: .output/public
     files:
       - '**/*'
-  cache:
-    paths:
-      - node_modules/**/*
