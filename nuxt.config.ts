@@ -1,9 +1,14 @@
 ﻿export default defineNuxtConfig({
-  devtools: { enabled: false }, // Disable in production
+  devtools: { enabled: false },
   
-  // Configure for Amplify deployment
+  // Configure for Amplify with Node 18 compatibility
   nitro: {
-    preset: 'aws-amplify'
+    preset: 'aws-amplify',
+    // Compatibility settings for Node 18
+    minify: false,
+    experimental: {
+      wasm: false
+    }
   },
   
   modules: [
@@ -29,6 +34,18 @@
   // SSR configuration
   ssr: true,
   
-  // Compatibility
-  compatibilityDate: '2024-07-30'
+  // Vite configuration for Node 18 compatibility
+  vite: {
+    define: {
+      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
+    }
+  },
+  
+  // Compatibility date for older Node versions
+  compatibilityDate: '2024-07-30',
+  
+  // Build configuration
+  build: {
+    transpile: ['@nuxtjs/tailwindcss']
+  }
 })
