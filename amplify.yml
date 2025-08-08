@@ -3,7 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Install and use Node.js 22 (same as your local environment)
+        # Install and use Node.js 22
         - echo "Installing Node.js 22..."
         - nvm install 22
         - nvm use 22
@@ -11,6 +11,9 @@ frontend:
         - echo "NPM version:" && npm --version
         # Install dependencies
         - npm ci
+        # Run nuxt prepare manually using npx
+        - echo "Running nuxt prepare..."
+        - npx nuxt prepare
     build:
       commands:
         - echo "Building application..."
