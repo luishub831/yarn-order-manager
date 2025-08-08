@@ -1,13 +1,12 @@
 ﻿export default defineNuxtConfig({
-  devtools: { enabled: false },
+  devtools: { enabled: process.env.NODE_ENV === 'development' },
   
-  // Configure for Amplify with Node 18 compatibility
+  // Optimized for AWS Amplify with Node.js 22
   nitro: {
     preset: 'aws-amplify',
-    // Compatibility settings for Node 18
-    minify: false,
+    // Leverage Node.js 22 performance features
     experimental: {
-      wasm: false
+      wasm: true
     }
   },
   
@@ -25,7 +24,8 @@
       shopifyDomain: process.env.SHOPIFY_DOMAIN,
       shopifyStorefrontToken: process.env.SHOPIFY_STOREFRONT_TOKEN,
       shopifyApiVersion: process.env.SHOPIFY_API_VERSION || '2025-07',
-      environment: process.env.NODE_ENV || 'production'
+      environment: process.env.NODE_ENV || 'production',
+      nodeVersion: process.version // For debugging
     }
   },
   
@@ -34,18 +34,22 @@
   // SSR configuration
   ssr: true,
   
-  // Vite configuration for Node 18 compatibility
+  // Modern build configuration for Node.js 22
+  build: {
+    transpile: process.env.NODE_ENV === 'production' ? ['@nuxtjs/tailwindcss'] : []
+  },
+  
+  // Vite configuration optimized for Node.js 22
   vite: {
-    define: {
-      __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
+    build: {
+      target: 'node22',
+      minify: 'esbuild'
+    },
+    optimizeDeps: {
+      include: ['pinia']
     }
   },
   
-  // Compatibility date for older Node versions
-  compatibilityDate: '2024-07-30',
-  
-  // Build configuration
-  build: {
-    transpile: ['@nuxtjs/tailwindcss']
-  }
+  // Use latest compatibility features
+  compatibilityDate: '2024-08-08'
 })

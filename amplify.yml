@@ -3,15 +3,20 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Force Node.js 22
+        # Install and use Node.js 22 (same as your local environment)
+        - echo "Installing Node.js 22..."
         - nvm install 22
         - nvm use 22
-        - node --version
-        - npm --version
-        - npm i
+        - echo "Node version:" && node --version
+        - echo "NPM version:" && npm --version
+        # Install dependencies
+        - npm ci
     build:
       commands:
+        - echo "Building application..."
         - npm run build
+        - echo "Build completed, checking output directory..."
+        - ls -la .output/
   artifacts:
     baseDirectory: .output/public
     files:
