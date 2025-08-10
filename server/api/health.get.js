@@ -5,21 +5,22 @@ export default defineEventHandler(async (event) => {
   return {
     status: 'healthy',
     timestamp: new Date().toISOString(),
-    deployment: {
-      stage: config.public.deploymentStage,
-      buildTime: config.public.buildTime,
+    environment: {
+      nodeVersion: process.version,
+      platform: process.platform,
+      memoryUsage: process.memoryUsage(),
+      environment: process.env.NODE_ENV || 'unknown'
+    },
+    shopify: {
+      hasDomain: !!config.public.shopifyDomain,
+      hasAccessToken: !!config.shopifyAccessToken,
+      domain: config.public.shopifyDomain,
       apiVersion: config.public.shopifyApiVersion
     },
-    environment: {
-      hasShopifyDomain: !!config.public.shopifyDomain,
-      hasAccessToken: !!config.shopifyAccessToken,
-      hasStorefrontToken: !!config.public.shopifyStorefrontToken,
-      shopifyDomain: config.public.shopifyDomain ? 
-        config.public.shopifyDomain.replace(/^https?:\/\//, '') : 'NOT_SET'
-    },
     amplify: {
-      ready: true,
-      nitroPreset: 'aws-amplify'
+      preset: 'aws-amplify',
+      region: process.env.AWS_REGION || 'unknown',
+      runtime: 'nitro'
     }
   }
 })

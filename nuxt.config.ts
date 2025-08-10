@@ -1,9 +1,13 @@
 ﻿export default defineNuxtConfig({
-  devtools: { enabled: false },
-  
-  // Simple Amplify configuration
+  // Configure for AWS Amplify with proper preset
   nitro: {
-    preset: 'aws-amplify'
+    preset: 'aws-amplify',
+    // Add error handling
+    errorHandler: '~/error.vue',
+    // Ensure compatibility
+    experimental: {
+      payloadExtraction: false
+    }
   },
   
   modules: [
@@ -12,10 +16,10 @@
   ],
   
   runtimeConfig: {
-    // Private keys (server-side only)
+    // Server-side only
     shopifyAccessToken: process.env.SHOPIFY_ACCESS_TOKEN,
     
-    // Public keys (client-side)
+    // Public (client-side)
     public: {
       shopifyDomain: process.env.SHOPIFY_DOMAIN,
       shopifyStorefrontToken: process.env.SHOPIFY_STOREFRONT_TOKEN,
@@ -25,6 +29,25 @@
   
   css: ['~/assets/css/main.css'],
   
-  // SSR configuration
-  ssr: true
+  // Ensure SSR is properly configured
+  ssr: true,
+  
+  // Add error handling
+  app: {
+    head: {
+      title: 'Order Management System',
+      meta: [
+        { charset: 'utf-8' },
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' }
+      ]
+    }
+  },
+  
+  // Route rules for better Amplify compatibility
+  routeRules: {
+    // All routes should be server-side rendered
+    '/**': { prerender: false, ssr: true },
+    // API routes
+    '/api/**': { cors: true }
+  }
 })
