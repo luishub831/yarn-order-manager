@@ -3,31 +3,42 @@ frontend:
   phases:
     preBuild:
       commands:
+        # Install Node.js 22 first
+        - echo "Installing Node.js 22..."
+        - nvm install 22
         - nvm use 22
-        # Completely clean install
+        - nvm alias default 22
+        - echo "Node version:" && node --version
+        - echo "NPM version:" && npm --version
+        
+        # Clean install
+        - echo "Cleaning previous builds..."
         - rm -rf node_modules package-lock.json .nuxt .output
-        # Ensure we have the right structure
-        - echo "Current directory structure:"
-        - ls -la
+        
         # Install dependencies
+        - echo "Installing dependencies..."
         - npm install
-        # Verify nuxt is installed locally
+        
+        # Verify Nuxt installation
+        - echo "Verifying Nuxt..."
         - ls -la node_modules/.bin/nuxt
-        - echo "Nuxt version:"
         - npx nuxt --version
+        
     build:
       commands:
-        # Build using local nuxt
-        - echo "Building with local nuxt..."
+        - echo "Starting build..."
+        - echo "Current directory:" && pwd
+        - echo "Files:" && ls -la
+        
+        # Build using local nuxt binary
+        - echo "Building with Nuxt..."
         - ./node_modules/.bin/nuxt build
-        # Alternative if that fails
-        - echo "Checking output..."
-        - ls -la .output/ || echo "No .output directory"
-        # If .output doesn't exist, try generate
-        - if [ ! -d ".output" ]; then ./node_modules/.bin/nuxt generate; fi
-        # Final check
+        
+        # Verify output
+        - echo "Checking build output..."
         - ls -la .output/
-        - ls -la .output/public/ || ls -la .output/dist/
+        - ls -la .output/public/ || echo "No public directory found"
+        
   artifacts:
     baseDirectory: .output/public
     files:
