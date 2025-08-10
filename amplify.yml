@@ -3,44 +3,32 @@ frontend:
   phases:
     preBuild:
       commands:
-        # Install Node.js 22 first
-        - echo "Installing Node.js 22..."
+        # Install Node.js 22
         - nvm install 22
         - nvm use 22
         - nvm alias default 22
         - echo "Node version:" && node --version
-        - echo "NPM version:" && npm --version
         
         # Clean install
-        - echo "Cleaning previous builds..."
         - rm -rf node_modules package-lock.json .nuxt .output
-        
-        # Install dependencies
-        - echo "Installing dependencies..."
         - npm install
-        
-        # Verify Nuxt installation
-        - echo "Verifying Nuxt..."
-        - ls -la node_modules/.bin/nuxt
-        - npx nuxt --version
         
     build:
       commands:
-        - echo "Starting build..."
-        - echo "Current directory:" && pwd
-        - echo "Files:" && ls -la
-        
-        # Build using local nuxt binary
-        - echo "Building with Nuxt..."
+        - echo "Building application..."
         - ./node_modules/.bin/nuxt build
         
-        # Verify output
-        - echo "Checking build output..."
-        - ls -la .output/
-        - ls -la .output/public/ || echo "No public directory found"
+        # Check what was actually created
+        - echo "Checking build outputs..."
+        - ls -la
+        - ls -la .amplify-hosting/ || echo "No .amplify-hosting directory"
+        - ls -la .amplify-hosting/compute/ || echo "No compute directory"
+        - ls -la .amplify-hosting/compute/default/ || echo "No default directory"
+        - ls -la .amplify-hosting/static/ || echo "No static directory"
+        - ls -la .output/ || echo "No .output directory"
         
   artifacts:
-    baseDirectory: .output/public
+    baseDirectory: .amplify-hosting/static
     files:
       - '**/*'
   cache:

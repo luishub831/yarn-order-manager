@@ -1,4 +1,9 @@
 ﻿export default defineNuxtConfig({
+  // Configure for AWS Amplify
+  nitro: {
+    preset: 'aws-amplify'
+  },
+  
   modules: [
     '@nuxtjs/tailwindcss',
     '@pinia/nuxt'
@@ -13,5 +18,8 @@
     }
   },
   
-  css: ['~/assets/css/main.css']
+  css: ['~/assets/css/main.css'],
+  
+  // Ensure SSR is enabled for Amplify
+  ssr: true
 })
