@@ -3,7 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm run bild
+        - npm run build
         - npm ci
     build:
       commands:
