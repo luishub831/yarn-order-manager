@@ -3,12 +3,35 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install nuxt@3.11.2 --save-dev
-        - npm ci
+        - nvm use 22
+        # Completely clean install
+        - rm -rf node_modules package-lock.json .nuxt .output
+        # Ensure we have the right structure
+        - echo "Current directory structure:"
+        - ls -la
+        # Install dependencies
+        - npm install
+        # Verify nuxt is installed locally
+        - ls -la node_modules/.bin/nuxt
+        - echo "Nuxt version:"
+        - npx nuxt --version
     build:
       commands:
-        - npx --yes nuxt@3.11.2 build
+        # Build using local nuxt
+        - echo "Building with local nuxt..."
+        - ./node_modules/.bin/nuxt build
+        # Alternative if that fails
+        - echo "Checking output..."
+        - ls -la .output/ || echo "No .output directory"
+        # If .output doesn't exist, try generate
+        - if [ ! -d ".output" ]; then ./node_modules/.bin/nuxt generate; fi
+        # Final check
+        - ls -la .output/
+        - ls -la .output/public/ || ls -la .output/dist/
   artifacts:
     baseDirectory: .output/public
     files:
       - '**/*'
+  cache:
+    paths:
+      - node_modules/**/*
