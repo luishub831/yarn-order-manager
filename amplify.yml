@@ -3,7 +3,7 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm install nuxt@3.11.2 --save-dev
+        - npm run bild
         - npm ci
     build:
       commands:
